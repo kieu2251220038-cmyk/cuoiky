@@ -1,0 +1,190 @@
+:root {
+  --bg: #f6efe6;
+  --surface: #fffaf3;
+  --ink: #2f241f;
+  --accent: #d65a31;
+  --accent-2: #5a3e36;
+  --ok: #1f8a70;
+  --danger: #b00020;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at 20% 10%, #ffe0c2, transparent 30%),
+    radial-gradient(circle at 90% 90%, #f6c7a9, transparent 35%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+.bg-shape {
+  position: fixed;
+  z-index: -1;
+  filter: blur(40px);
+  opacity: 0.4;
+}
+
+.bg-shape-1 {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: #f7a072;
+  top: -60px;
+  left: -80px;
+}
+
+.bg-shape-2 {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: #ed6a5a;
+  right: -70px;
+  bottom: -40px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.hero p {
+  margin-top: 8px;
+  color: #5e4a41;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid #eeded0;
+  border-radius: 18px;
+  padding: 18px;
+  margin-top: 18px;
+  box-shadow: 0 10px 24px rgba(92, 62, 42, 0.08);
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+input,
+button {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #d7c3b4;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: var(--accent-2);
+  width: auto;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+}
+
+#app-section {
+  display: none;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expense-form,
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.stats {
+  margin-bottom: 14px;
+}
+
+.stats-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stats-btn {
+  width: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #edd8c7;
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.row-actions button {
+  width: auto;
+  padding: 7px 10px;
+}
+
+#message {
+  margin-top: 14px;
+  font-weight: 700;
+}
+
+#message.ok {
+  color: var(--ok);
+}
+
+#message.error {
+  color: var(--danger);
+}
+
+@media (max-width: 900px) {
+  .auth-grid,
+  .expense-form,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    display: none;
+  }
+}
