@@ -88,3 +88,52 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         )
 
         return Response(list(data))
+
+    @action(detail=False, methods=["get"])
+    def categories(self, request):
+        """Return distinct categories with totals and counts for current user and filters."""
+        queryset = self.get_queryset()
+        data = (
+            queryset.values("category")
+            .annotate(total=Sum("amount"), count=Count("id"))
+            .order_by("-total")
+        )
+        return Response(list(data))
+
+    @action(detail=False, methods=["get"])
+    def trend(self, request):
+        """Return monthly totals for the past N months (default 6).
+
+        Query params:
+        - months: int, number of months to include (default 6)
+        """
+        try:
+            months = int(request.query_params.get("months", 6))
+        except (ValueError, TypeError):
+            months = 6
+
+        from datetime import date
+        from dateutil.relativedelta import relativedelta
+
+        end = date.today().replace(day=1)
+        start = (end - relativedelta(months=months - 1))
+
+        queryset = self.get_queryset().filter(spent_at__gte=start)
+
+        data = (
+            queryset.annotate(period=TruncMonth("spent_at"))
+            .values("period")
+            .annotate(total=Sum("amount"))
+            .order_by("period")
+        )
+
+        # build full months list with zeroes when missing
+        period_map = {item["period"].date(): item["total"] for item in data}
+        result = []
+        cur = start
+        while cur <= end:
+            total = float(period_map.get(cur, 0) or 0)
+            result.append({"period": cur.isoformat(), "total": total})
+            cur = (cur + relativedelta(months=1))
+
+        return Response(result)
