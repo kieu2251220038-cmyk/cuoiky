@@ -17,7 +17,7 @@
 
 Thu tu khai bao va kiem tra:
 1. Backend
-2. Frontend
+2. Frontend React/Vite
 3. Config CORS va ENV
 
 URL public mau:
@@ -30,6 +30,7 @@ URL public mau:
 - Tao PostgreSQL service tren Render
 - Tao Static Site cho frontend (hoac Web Service Docker frontend)
 - Set ENV dung theo `.env.example`
+- Frontend build ra React app qua Vite, sau do Nginx phuc vu `dist`
 
 Thu tu can chuan bi:
 1. Backend deploy truoc de co API public URL

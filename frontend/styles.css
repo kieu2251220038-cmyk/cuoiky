@@ -169,11 +169,19 @@ body {
   box-shadow: 0 12px 24px rgba(45, 212, 191, 0.18);
 }
 
+button.button-link {
+  width: auto;
+}
+
 .button-link-secondary {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
+}
+
+.guest-actions button {
+  width: auto;
 }
 
 .guest-features {
@@ -231,15 +239,25 @@ body {
   margin-top: 16px;
 }
 
-.auth-footer a {
+.auth-footer a,
+.auth-footer button {
   color: var(--accent);
   text-decoration: none;
   font-weight: 600;
   cursor: pointer;
 }
 
-.auth-footer a:hover {
+.auth-footer a:hover,
+.auth-footer button:hover {
   text-decoration: underline;
+}
+
+.auth-footer button {
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 input,

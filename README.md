@@ -1,7 +1,7 @@
 # MoneyTracker - He thong quan ly chi tieu ca nhan
 
 ## 1) Kien truc
-Frontend (HTML/CSS/JS) -> Backend API (Django REST) -> PostgreSQL
+Frontend (React/Vite) -> Backend API (Django REST) -> PostgreSQL
 
 ## 1.1) Kien truc bat buoc
 - Frontend: React hoac tuong duong
@@ -40,6 +40,7 @@ Dung he thong:
 ## 4) ENV
 - Bat buoc co `.env` de chay local, nhung khong duoc commit
 - Bat buoc co `.env.example` de tham khao va commit
+- Frontend React co the dung `frontend/.env.example` cho `VITE_API_BASE_URL` khi dev
 - Tuyet doi khong hardcode API URL, DB connection, API key
 - Sai ENV la nguyen nhan pho bien gay loi production
 

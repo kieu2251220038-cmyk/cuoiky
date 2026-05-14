@@ -10,6 +10,12 @@ venv/
 # Django
 backend/staticfiles/
 
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.env
+frontend/.env.local
+
 # Environment
 .env
 

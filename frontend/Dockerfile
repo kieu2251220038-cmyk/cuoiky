@@ -1,15 +1,20 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
 FROM nginx:1.27-alpine
 
 RUN apk add --no-cache gettext
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY index.html /usr/share/nginx/html/index.html
-COPY login.html /usr/share/nginx/html/login.html
-COPY register.html /usr/share/nginx/html/register.html
-COPY styles.css /usr/share/nginx/html/styles.css
-COPY app.js /usr/share/nginx/html/app.js
-COPY config.js /usr/share/nginx/html/config.js
-COPY config.template.js /usr/share/nginx/html/config.template.js
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/config.template.js /usr/share/nginx/html/config.template.js
 COPY docker-entrypoint.sh /docker-entrypoint-custom.sh
 
 RUN chmod +x /docker-entrypoint-custom.sh
