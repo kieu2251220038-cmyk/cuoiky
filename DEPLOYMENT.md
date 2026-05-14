@@ -55,3 +55,90 @@ Can dat cac bien:
 ## Luu y quan trong
 - Neu ENV sai, production co the loi ngay khi khoi dong hoac khi goi API
 - Uu tien kiem tra `SECRET_KEY`, `DB_*`, `CORS_ALLOWED_ORIGINS`, `FRONTEND_API_BASE_URL`
+
+## Tự động hoá deploy (mẫu)
+
+Dưới đây là hướng dẫn nhanh và mẫu `GitHub Actions` để tự động deploy lên các dịch vụ phổ biến. Luôn lưu secrets an toàn trong `Repository settings -> Secrets`.
+
+1) Vercel (frontend static)
+- Secrets cần: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
+- Mẫu workflow (chỉ frontend):
+
+```yaml
+name: Deploy Frontend to Vercel
+on:
+   push:
+      branches: [main]
+
+jobs:
+   deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Vercel Action
+            uses: amondnet/vercel-action@v20
+            with:
+               vercel-token: ${{ secrets.VERCEL_TOKEN }}
+               vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+               vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+               working-directory: ./frontend
+```
+
+2) Render (full stack or containers)
+- Secrets cần: `RENDER_API_KEY`, `RENDER_SERVICE_ID` (nếu dùng manual deploy API)
+- Mẫu: gọi API deploy của Render khi có push tới `main`:
+
+```yaml
+name: Deploy to Render
+on:
+   push:
+      branches: [main]
+
+jobs:
+   render-deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Trigger Render deploy
+            run: |
+               curl -X POST \
+                  -H "Content-Type: application/json" \
+                  -H "Accept: application/json" \
+                  -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+                  -d '{"serviceId":"'${{ secrets.RENDER_SERVICE_ID }}'"}' \
+                  https://api.render.com/deploy
+```
+
+3) Docker VPS via SSH (WSL/VPS)
+- Secrets cần: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`
+- Mẫu workflow: build images in CI, push to server and restart docker-compose via SSH.
+
+```yaml
+name: Deploy to VPS
+on:
+   push:
+      branches: [main]
+
+jobs:
+   deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Build and save images
+            run: |
+               docker compose -f docker-compose.yml build --parallel
+               docker save backend | gzip > backend.tar.gz
+         - name: Copy and restart via SSH
+            uses: appleboy/ssh-action@v0.1.7
+            with:
+               host: ${{ secrets.SSH_HOST }}
+               username: ${{ secrets.SSH_USER }}
+               key: ${{ secrets.SSH_PRIVATE_KEY }}
+               script: |
+                  set -e
+                  mkdir -p /tmp/deploy && cd /tmp/deploy
+                  # copy uploaded tar and load, then restart compose
+                  docker compose down && docker compose up -d --build
+```
+
+Ghi chú: các mẫu trên chỉ là ví dụ. Trước khi bật deploy tự động, kiểm tra kỹ CI (lint/test/build) và chỉ kích hoạt deploy cho `main` khi PR đã được review.

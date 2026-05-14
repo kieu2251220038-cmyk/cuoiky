@@ -6,6 +6,9 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
+# Create a runtime config placeholder so Vite can bundle during image build.
+# At runtime `docker-entrypoint.sh` will replace `/usr/share/nginx/html/config.js`.
+RUN cp config.template.js config.js || true
 RUN npm run build
 
 FROM nginx:1.27-alpine

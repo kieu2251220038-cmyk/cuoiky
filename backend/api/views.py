@@ -28,7 +28,10 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
 
         if User.objects.filter(username=serializer.validated_data["username"]).exists():
-            return Response({"detail": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Username already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         user = serializer.save()
         return Response(

@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
+# Normalize line endings for entrypoint (fix CRLF -> LF on Windows hosts)
+RUN sed -i 's/\r$//' /app/entrypoint.sh || true
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
