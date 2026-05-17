@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 from pathlib import Path
 
 
@@ -69,16 +70,31 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": require_env("DB_NAME"),
-        "USER": require_env("DB_USER"),
-        "PASSWORD": require_env("DB_PASSWORD"),
-        "HOST": require_env("DB_HOST"),
-        "PORT": require_env("DB_PORT"),
+database_url = os.getenv("DATABASE_URL")
+
+if database_url:
+    parsed_database_url = urlparse(database_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": parsed_database_url.path.lstrip("/"),
+            "USER": parsed_database_url.username or "",
+            "PASSWORD": parsed_database_url.password or "",
+            "HOST": parsed_database_url.hostname or "",
+            "PORT": parsed_database_url.port or "5432",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": require_env("DB_NAME"),
+            "USER": require_env("DB_USER"),
+            "PASSWORD": require_env("DB_PASSWORD"),
+            "HOST": require_env("DB_HOST"),
+            "PORT": require_env("DB_PORT"),
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
