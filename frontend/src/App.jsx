@@ -58,7 +58,7 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState([]);
   const [trend, setTrend] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [, setCategories] = useState([]);
 
   const [statsGroup, setStatsGroup] = useState('month');
   const [loading, setLoading] = useState(false);
@@ -177,7 +177,7 @@ function App() {
         loadTrend(),
       ]);
     } catch (error) {
-      console.log(error);
+     // console.log(error);
     } finally {
       setLoading(false);
     }
