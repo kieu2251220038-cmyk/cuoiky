@@ -18,6 +18,7 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ["-spent_at", "-created_at"]
+        db_table = "transactions"
 
     def __str__(self) -> str:
         return f"{self.title} ({self.amount})"

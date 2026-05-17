@@ -50,6 +50,42 @@ class ExpenseApiTests(APITestCase):
             1,
         )
 
+    def test_update_and_delete_expense(self):
+        expense = Expense.objects.create(
+            user=self.user,
+            title="Lunch",
+            category="Food",
+            amount="80000.00",
+            spent_at=date.today(),
+        )
+
+        update_payload = {
+            "title": "Lunch box",
+            "category": "Food",
+            "amount": "90000.00",
+            "spent_at": str(date.today()),
+            "note": "Updated from frontend",
+        }
+
+        update_response = self.client.put(
+            f"/api/expenses/{expense.id}/",
+            update_payload,
+            format="json",
+        )
+        self.assertEqual(update_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(update_response.json()["title"], "Lunch box")
+
+        delete_response = self.client.delete(
+            f"/api/expenses/{expense.id}/"
+        )
+        self.assertEqual(
+            delete_response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+        self.assertFalse(
+            Expense.objects.filter(id=expense.id).exists()
+        )
+
     def test_stats_endpoint(self):
         Expense.objects.create(
             user=self.user,

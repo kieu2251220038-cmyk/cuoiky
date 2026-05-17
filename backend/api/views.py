@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db.models import Count, Sum
-from django.db.models.functions import TruncDate, TruncMonth
 from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -80,21 +79,24 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def stats(self, request):
         group_by = request.query_params.get("group_by", "month")
-        queryset = self.get_queryset()
+        queryset = self.get_queryset().values_list("spent_at", "amount")
 
-        if group_by == "day":
-            bucket = TruncDate("spent_at")
-        else:
-            bucket = TruncMonth("spent_at")
+        period_map = {}
+        for spent_at, amount in queryset:
+            period = spent_at if group_by == "day" else spent_at.replace(day=1)
+            item = period_map.setdefault(
+                period,
+                {"period": period, "total": 0.0, "count": 0},
+            )
+            item["total"] += float(amount)
+            item["count"] += 1
 
-        data = (
-            queryset.annotate(period=bucket)
-            .values("period")
-            .annotate(total=Sum("amount"), count=Count("id"))
-            .order_by("period")
-        )
+        data = [
+            {**item, "period": item["period"].isoformat()}
+            for item in sorted(period_map.values(), key=lambda value: value["period"])
+        ]
 
-        return Response(list(data))
+        return Response(data)
 
     @action(detail=False, methods=["get"])
     def categories(self, request):
@@ -126,16 +128,11 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         start = (end - relativedelta(months=months - 1))
 
         queryset = self.get_queryset().filter(spent_at__gte=start)
+        period_map = {}
+        for spent_at, amount in queryset.values_list("spent_at", "amount"):
+            period = spent_at.replace(day=1)
+            period_map[period] = period_map.get(period, 0.0) + float(amount)
 
-        data = (
-            queryset.annotate(period=TruncMonth("spent_at"))
-            .values("period")
-            .annotate(total=Sum("amount"))
-            .order_by("period")
-        )
-
-        # Build full months list with zeroes when missing.
-        period_map = {item["period"].date(): item["total"] for item in data}
         result = []
         cur = start
         while cur <= end:
