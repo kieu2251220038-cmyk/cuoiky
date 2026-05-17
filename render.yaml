@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: moneytracker-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: moneytracker-backend.onrender.com
+
+  - type: web
+    name: moneytracker-frontend
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    plan: free
+    envVars:
+      - key: API_BASE_URL
+        value: https://moneytracker-backend.onrender.com/api
