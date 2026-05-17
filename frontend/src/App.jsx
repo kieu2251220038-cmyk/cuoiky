@@ -176,8 +176,8 @@ function App() {
         loadCategories(),
         loadTrend(),
       ]);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      notify('Khong the tai du lieu dashboard', false);
     } finally {
       setLoading(false);
     }

@@ -92,5 +92,10 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Prepare compose environment
+        working-directory: ${{ github.workspace }}
+        run: cp .env.example .env
+
       - name: Build Docker images
+        working-directory: ${{ github.workspace }}
         run: docker compose build

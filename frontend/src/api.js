@@ -38,7 +38,9 @@ export async function request(path, options = {}) {
         errorData.detail ||
         errorData.message ||
         JSON.stringify(errorData);
-    } catch {}
+    } catch {
+      errorMessage = response.statusText || errorMessage;
+    }
 
     throw new Error(errorMessage);
   }

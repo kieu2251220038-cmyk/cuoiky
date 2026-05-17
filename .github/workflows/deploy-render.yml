@@ -7,15 +7,20 @@ on:
 jobs:
   render-deploy:
     runs-on: ubuntu-latest
+    env:
+      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Skip deploy when Render secrets are missing
+        if: env.RENDER_API_KEY == '' || env.RENDER_SERVICE_ID == ''
+        run: echo "Render secrets are not configured; skipping deploy."
+
       - name: Trigger Render deploy
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        if: env.RENDER_API_KEY != '' && env.RENDER_SERVICE_ID != ''
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
