@@ -4,6 +4,7 @@
 Frontend (React/Vite) -> Backend API (Django REST) -> PostgreSQL
 
 ## 1.1) Kien truc bat buoc
+- Moi do an phai co day du 3 thanh phan:
 - Frontend: React hoac tuong duong
 - Backend: API phuc vu du lieu va nghiep vu
 - Database: luu tru du lieu tap trung
@@ -50,6 +51,16 @@ Dung he thong:
 - Moi mo truong phai cap nhat rieng `SECRET_KEY`, `DB_*`, `CORS_ALLOWED_ORIGINS`, `FRONTEND_API_BASE_URL`
 
 ## 5) Branching
+
+### 5.1 Repository
+- Quan ly source code bang GitHub.
+- Repo co the public hoac private tuy yeu cau du an.
+
+### 5.2 Branching
+- Bat buoc co cac branch chinh:
+  - `main`
+  - `dev`
+  - `feature/*`
 - `main`: production
 - `dev`: integration
 - `feature/*`: tinh nang
@@ -60,29 +71,29 @@ Quy trinh de xuat:
 3. Tao PR ve dev
 4. Sau khi test xong merge dev -> main
 
+### 5.3 Commit
+- Khong duoc chi commit 1 lan cuoi cung.
+- Lich su commit phai the hien qua trinh phat trien ro rang, tung buoc co y nghia.
+- Uu tien commit nho, mo ta dung noi dung thay doi.
+- Xem chi tiet quy trinh branch/commit tai [BRANCHING.md](BRANCHING.md).
+
 ## 6) CI/CD
 Workflow tai `.github/workflows/ci.yml`
-- Dung GitHub Actions
-- Trigger: `push`, `pull_request`
-- Buoc bat buoc: install dependency -> lint -> test -> build
-- Pipeline phai fail neu co loi, khong duoc bypass
+- Dung GitHub Actions.
+- Trigger: `push` vao `main`, `dev`, `feature/**` va `pull_request` ve `main`, `dev`.
+- Backend checks: setup Python, install dependency, `flake8`, `python manage.py test`.
+- Frontend build: setup Node, `npm ci`, `npm run lint`, `npm run build`.
+- Build step: `docker compose build` de kiem tra image build.
+- Pipeline phai fail neu co loi, khong duoc bypass.
 
 ## 7) Deploy
-Khong demo bang chay local.
-Bat buoc deploy len mot trong cac moi truong sau:
-- VPS hoac WSL (Ubuntu)
-- Docker VPS
-- Vercel / Render
-
-Thu tu deploy phai dung:
-1. Backend
-2. Frontend
-3. Config: CORS, ENV, API URL
-
-Yeu cau bat buoc sau deploy:
-- Frontend goi dung backend public URL
-- Backend da cau hinh CORS phu hop voi frontend domain
-- ENV production duoc khai bao day du va khong hardcode
+Yeu cau bat buoc:
+- Deploy len mot trong cac moi truong: VPS/WSL (Ubuntu), Docker VPS, Vercel/Render.
+- Khong duoc demo bang cach chay local.
+- Thu tu deploy: Backend -> Frontend -> Config (CORS, ENV, API URL).
+- Frontend phai goi dung backend public URL.
+- Backend phai cau hinh CORS phu hop voi frontend domain.
+- ENV production phai du va khong hardcode.
 
 ## 8) Logging + Debug
 Xem [DEBUG_GUIDE.md](DEBUG_GUIDE.md)
