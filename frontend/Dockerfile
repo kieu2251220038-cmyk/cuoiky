@@ -20,6 +20,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY --from=build /app/config.template.js /usr/share/nginx/html/config.template.js
 COPY docker-entrypoint.sh /docker-entrypoint-custom.sh
 
+RUN sed -i 's/\r$//' /docker-entrypoint-custom.sh
 RUN chmod +x /docker-entrypoint-custom.sh
 
 EXPOSE 80

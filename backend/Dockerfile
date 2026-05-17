@@ -15,7 +15,8 @@ COPY . /app
 # Normalize line endings for entrypoint (fix CRLF -> LF on Windows hosts)
 RUN sed -i 's/\r$//' /app/entrypoint.sh || true
 RUN chmod +x /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]

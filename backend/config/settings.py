@@ -93,7 +93,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 cors_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:8080")
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins.split(",") if origin.strip()]
-
+CORS_ALLOW_ALL_ORIGINS = True
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
