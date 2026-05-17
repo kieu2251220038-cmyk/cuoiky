@@ -84,7 +84,10 @@ if database_url:
             "PORT": parsed_database_url.port or "5432",
         }
     }
-else:
+elif all(
+    os.getenv(name)
+    for name in ("DB_NAME", "DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT")
+):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -93,6 +96,13 @@ else:
             "PASSWORD": require_env("DB_PASSWORD"),
             "HOST": require_env("DB_HOST"),
             "PORT": require_env("DB_PORT"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
