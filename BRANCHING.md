@@ -5,6 +5,10 @@
 - dev
 - feature/*
 
+## Repository
+- Quan ly source code bang GitHub.
+- Repo co the public hoac private tuy yeu cau du an.
+
 ## Kien truc he thong bat buoc
 - Moi do an phai co du:
 - Frontend (React hoac tuong duong)
