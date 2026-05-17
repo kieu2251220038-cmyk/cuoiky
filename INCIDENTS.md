@@ -4,6 +4,9 @@
 Hien tuong:
 - Goi API tao expense tra ve 500.
 
+Layer loi:
+- L3 Backend
+
 Nguyen nhan:
 - DB schema chua migrate, hoac field du lieu gui len sai kieu.
 
@@ -20,6 +23,10 @@ Cach phong tranh:
 Hien tuong:
 - Browser bao CORS blocked khi frontend goi backend.
 
+Layer loi:
+- L4 Frontend
+- L3 Backend
+
 Nguyen nhan:
 - `CORS_ALLOWED_ORIGINS` khong chua domain frontend.
 
@@ -34,6 +41,11 @@ Cach phong tranh:
 ## 3) Sai ENV
 Hien tuong:
 - App khoi dong duoc nhung login/API fail khong ro ly do.
+
+Layer loi:
+- L1 Infrastructure
+- L3 Backend
+- L4 Frontend
 
 Nguyen nhan:
 - Sai `FRONTEND_API_BASE_URL` hoac sai `DB_HOST`, `DB_PORT`.
@@ -51,6 +63,9 @@ Cach phong tranh:
 Hien tuong:
 - Backend khong ket noi duoc DB, log bao connection refused.
 
+Layer loi:
+- L2 External (DB)
+
 Nguyen nhan:
 - DB chua healthy, sai password, hoac volume DB loi.
 
@@ -63,3 +78,22 @@ Cach fix:
 Cach phong tranh:
 - Dung healthcheck + depends_on condition: service_healthy
 - Backup DB dinh ky va monitor tai nguyen may chu
+
+## 5) Frontend Undefined Error
+Hien tuong:
+- UI bao loi `undefined` hoac khong render du lieu sau khi call API.
+
+Layer loi:
+- L4 Frontend
+
+Nguyen nhan:
+- Frontend truy cap sai field response, hoac khong guard du lieu null/undefined.
+
+Cach fix:
+1. Kiem tra response API va mapping field.
+2. Bo sung null check / optional chaining cho component.
+3. Them default state truoc khi render.
+
+Cach phong tranh:
+- Dinh nghia schema response ro rang.
+- Viet test cho component va API adapter.

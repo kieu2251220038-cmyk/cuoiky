@@ -14,6 +14,14 @@
   - Backend: `docker logs -f moneytracker_backend`
   - Database: `docker logs -f moneytracker_db`
 
+## 2.1) Deploy logs
+- Render:
+  - Xem Logs trong dashboard service.
+- Vercel:
+  - Xem Functions/Deployment logs trong dashboard project.
+- VPS / Docker VPS:
+  - Xem log qua `docker compose logs -f` hoac log cua reverse proxy neu co.
+
 ## 3) Debug theo layer
 ### Frontend
 - Mo DevTools browser -> Console + Network
@@ -33,6 +41,10 @@
   - `docker exec -it moneytracker_db psql -U moneytracker -d moneytracker`
 - Kiem tra bang:
   - `\dt`
+
+### External storage
+- Kiem tra cac dich vu storage ben ngoai neu co dung trong deploy.
+- Xac minh bien ENV va quyen truy cap den object storage hoac file storage.
 
 ### Infrastructure
 - Kiem tra status:

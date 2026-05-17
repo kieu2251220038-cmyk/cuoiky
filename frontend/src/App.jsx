@@ -58,7 +58,6 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState([]);
   const [trend, setTrend] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   const [statsGroup, setStatsGroup] = useState('month');
   const [loading, setLoading] = useState(false);
@@ -160,7 +159,6 @@ function App() {
     setExpenses([]);
     setStats([]);
     setTrend([]);
-    setCategories([]);
     setFilters(initialFilters);
     localStorage.removeItem(tokenKey);
     localStorage.removeItem('moneytracker_username');
@@ -173,11 +171,10 @@ function App() {
       await Promise.all([
         loadExpenses(),
         loadStats(statsGroup),
-        loadCategories(),
         loadTrend(),
       ]);
     } catch (error) {
-      console.log(error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -218,16 +215,6 @@ function App() {
       setStats(Array.isArray(data) ? data : []);
     } catch {
       setStats([]);
-    }
-  }
-
-  async function loadCategories() {
-    try {
-      const data = await request('/expenses/categories/');
-
-      setCategories(Array.isArray(data) ? data : []);
-    } catch {
-      setCategories([]);
     }
   }
 

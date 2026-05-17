@@ -1,7 +1,6 @@
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -17,7 +16,10 @@ class HealthCheckTests(APITestCase):
 
 class ExpenseApiTests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="StrongPass123")
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="StrongPass123",
+        )
         login_response = self.client.post(
             "/api/auth/login",
             {"username": "testuser", "password": "StrongPass123"},
@@ -34,12 +36,19 @@ class ExpenseApiTests(APITestCase):
             "spent_at": str(date.today()),
             "note": "Morning coffee",
         }
-        create_response = self.client.post("/api/expenses/", payload, format="json")
+        create_response = self.client.post(
+            "/api/expenses/",
+            payload,
+            format="json",
+        )
         self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
 
         list_response = self.client.get("/api/expenses/")
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(list_response.json()), 1)
+        self.assertEqual(
+            len(list_response.json()),
+            1,
+        )
 
     def test_stats_endpoint(self):
         Expense.objects.create(

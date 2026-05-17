@@ -27,8 +27,13 @@ class RegisterView(APIView):
         serializer = UserRegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if User.objects.filter(username=serializer.validated_data["username"]).exists():
-            return Response({"detail": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(
+            username=serializer.validated_data["username"]
+        ).exists():
+            return Response(
+                {"detail": "Username already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         user = serializer.save()
         return Response(
@@ -59,7 +64,9 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         if category:
             queryset = queryset.filter(category__iexact=category)
         if query:
-            queryset = queryset.filter(Q(title__icontains=query) | Q(note__icontains=query))
+            queryset = queryset.filter(
+                Q(title__icontains=query) | Q(note__icontains=query)
+            )
         if date_from:
             queryset = queryset.filter(spent_at__gte=date_from)
         if date_to:
@@ -91,7 +98,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def categories(self, request):
-        """Return distinct categories with totals and counts for current user and filters."""
+        """Return distinct categories with totals and counts."""
         queryset = self.get_queryset()
         data = (
             queryset.values("category")
@@ -127,7 +134,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
             .order_by("period")
         )
 
-        # build full months list with zeroes when missing
+        # Build full months list with zeroes when missing.
         period_map = {item["period"].date(): item["total"] for item in data}
         result = []
         cur = start

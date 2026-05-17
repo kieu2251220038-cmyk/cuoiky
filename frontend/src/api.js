@@ -1,18 +1,26 @@
-const API_BASE_URL =
-  window.__APP_CONFIG__?.API_BASE_URL ||
-  import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000/api';
+function resolveApiBaseUrl() {
+  const baseUrl =
+    window.__APP_CONFIG__?.API_BASE_URL ||
+    import.meta.env.VITE_API_BASE_URL;
+
+  if (!baseUrl) {
+    throw new Error('Missing API base URL configuration');
+  }
+
+  return baseUrl;
+}
 
 export function getApiBaseUrl() {
-  return API_BASE_URL;
+  return resolveApiBaseUrl();
 }
 
 export async function request(path, options = {}) {
+  const apiBaseUrl = resolveApiBaseUrl();
   const token =
     localStorage.getItem('moneytracker_access_token');
 
   const response = await fetch(
-    `${API_BASE_URL}${path}`,
+    `${apiBaseUrl}${path}`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +46,9 @@ export async function request(path, options = {}) {
         errorData.detail ||
         errorData.message ||
         JSON.stringify(errorData);
-    } catch {}
+    } catch (parseError) {
+      void parseError;
+    }
 
     throw new Error(errorMessage);
   }
